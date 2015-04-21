@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd" >
+
+ 	<!-- Quartz 관련 설정 시작 -->
+ 	<!-- Quartz task main bean -->
+ 	<bean id="testSvcImpl" class="net.anyjava.quartz.TestServiceImpl" />
+ 	
+ 	<!-- 테스트 JOB -->
+ 	<bean id="testJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean"
+        p:jobClass="net.anyjava.quartz.TestJob"
+        p:durability="true" >
+		<property name="jobDataAsMap">
+            <map>
+                <entry key="svc" value-ref="testSvcImpl"/>
+            </map>
+        </property>
+    </bean>
+    
+    
+    <!-- 광고 가상 계좌 생성/삭제 스케쥴 cronTrigger : 매시간 0초에서 부터 15초 간격으로 작업 수행-->
+    <bean id="testCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"
+          p:jobDetail-ref="testJob"
+          p:startDelay="1000"
+          p:cronExpression="0/15 * * * * ?" />
+    
+ 
+ 	<!-- Quartz scheduler 설정 -->
+ 	<!-- 광고 가상 계좌 생성/삭제 스케쥴  : threadpool size 2로 해서 하나는 실제 작업을 다른 하나는 작업 중인 thread가 있으면 요청 작업을 바로 skip하는 용도의 thread-->
+    <bean id="testScheduler1" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="testCronTrigger"/>
+            </list>
+        </property>
+        
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+                <prop key="org.quartz.threadPool.threadCount">2</prop>
+                <prop key="org.quartz.threadPool.threadPriority">5</prop>
+                <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+                <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- Quartz 관련 설정 끝 -->
+    
+</beans>

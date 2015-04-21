@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'application'
+
+mainClassName = "net.anyjava.StartGradle"
+
+//need for jar compile
+jar {
+    baseName = 'StartGradle'
+    version = '1.0.0'
+    manifest {
+    	attributes("Manifest-Version": version,
+    		"Class-Path": ".",
+            "Main-Class": mainClassName)
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs=release" }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+
+
+    compile 'org.springframework:spring-core'
+    compile 'org.springframework:spring-tx'
+    
+    //for quartz
+    compile 'org.springframework:spring-context-support'
+    compile 'org.quartz-scheduler:quartz:2.2.1'
+    
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+task wrapper(type : Wrapper) {
+    gradleVersion = '1.11'
+}
