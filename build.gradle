@@ -34,7 +34,10 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+	// 아래 exclude 문을 제외하면 8080port 를 이용한 tomcat 사용가능 
+    compile("org.springframework.boot:spring-boot-starter-web") {
+    	exclude module: "spring-boot-starter-tomcat"
+    }
 
 
     compile 'org.springframework:spring-core'
