@@ -4,11 +4,11 @@
  - Windows
    * buildw.bat build
    * `build/libs` 폴더 안헤 jar 파일이 생성됨
-   * 실행 => `java -jar StartGradle.jar`
+   * 실행 => `java -jar build/libs/StartGradle.jar`
  - OS X
    * /buildw build
    * `build/libs` 폴더 안헤 jar 파일이 생성됨
-   * 실행 => `java -jar StartGradle.jar`
+   * 실행 => `java -jar build/libs/StartGradle.jar`
 
 ## 2. STS 임포트방법
  - Windows
